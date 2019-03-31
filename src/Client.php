@@ -166,4 +166,25 @@ class Client
 
         return true;
     }
+
+    /**
+     * Renew the current session for 30 days.
+     *
+     * @return boolean
+     */
+    public function renewSession(): bool
+    {
+        if ($this->token === null) {
+            return false;
+        }
+
+        try {
+            $this->request('POST', '/user/new-token');
+            $this->token = $ret->authToken;
+        } catch (ApiException $e) {
+            return false;
+        }
+
+        return true;
+    }
 }
