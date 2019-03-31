@@ -3,6 +3,7 @@
 namespace GuillaumeGagnaire\Georide\API;
 
 use GuillaumeGagnaire\Georide\API\ApiException;
+use GuillaumeGagnaire\Georide\API\User;
 
 /**
  * Handles the requests to the Georide API
@@ -31,6 +32,13 @@ class Client
     private $timeout = 30;
 
     /**
+     * Contains the methods of user management
+     *
+     * @var \GuillaumeGagnaire\Georide\API\User
+     */
+    public $user;
+
+    /**
      * Creates a client instance
      *
      * @param string $api_url       API server base URL
@@ -38,6 +46,7 @@ class Client
     public function __construct(string $api_url = 'https://api.georide.fr')
     {
         $this->api_url = rtrim($api_url, '/');
+        $this->user = new User($this);
     }
 
     /**
@@ -57,10 +66,10 @@ class Client
      * @param string $method        HTTP method to use
      * @param string $endpoint      API endpoint
      * @param array $data           Data to send
-     * @return object
+     * @return mixed
      * @throws ApiException
      */
-    public function request(string $method, string $endpoint, array $data = []): object
+    public function request(string $method, string $endpoint, array $data = [])
     {
         // Adds a leading slash to $endpoint
         if (substr($endpoint, 0, 1) !== '/') {
@@ -115,76 +124,13 @@ class Client
     }
 
     /**
-     * Provides a new auth token.
+     * Provides a new auth token, or null if logged out.
      *
-     * @param string $token     Auth token
+     * @param string|null $token     Auth token
      * @return void
      */
-    public function setAuthToken(string $token): void
+    public function setAuthToken($token): void
     {
         $this->token = $token;
-    }
-
-    /**
-     * Sign in to the Georide API
-     *
-     * @param string $email
-     * @param string $password
-     * @return boolean
-     */
-    public function login(string $email, string $password): bool
-    {
-        try {
-            $ret = $this->request('POST', '/user/login', [
-                'email' => $email,
-                'password' => $password
-            ]);
-            $this->token = $ret->authToken;
-        } catch (ApiException $e) {
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * Sign out from the Georide API
-     *
-     * @return boolean
-     */
-    public function logout(): bool
-    {
-        if ($this->token === null) {
-            return false;
-        }
-
-        try {
-            $this->request('POST', '/user/logout');
-            $this->token = null;
-        } catch (ApiException $e) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * Renew the current session for 30 days.
-     *
-     * @return boolean
-     */
-    public function renewSession(): bool
-    {
-        if ($this->token === null) {
-            return false;
-        }
-
-        try {
-            $this->request('POST', '/user/new-token');
-            $this->token = $ret->authToken;
-        } catch (ApiException $e) {
-            return false;
-        }
-
-        return true;
     }
 }
