@@ -2,6 +2,10 @@
 
 namespace GuillaumeGagnaire\Georide\API;
 
-class Client {
-
+class Client
+{
+    public function __construct()
+    {
+        var_dump($this);
+    }
 }
