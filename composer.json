@@ -1,0 +1,14 @@
+{
+    "name": "guillaume-gagnaire/georide-api",
+    "description": "Wrapper to access Georide open API",
+    "type": "library",
+    "license": "GNU",
+    "authors": [
+        {
+            "name": "Guillaume Gagnaire",
+            "email": "contact@scrola.net"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
