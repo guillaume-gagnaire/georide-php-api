@@ -2,20 +2,25 @@
     "name": "guillaume-gagnaire/georide-api",
     "description": "Wrapper to access Georide open API",
     "type": "library",
-    "license": "GNU",
+    "license": "MIT",
     "authors": [
         {
             "name": "Guillaume Gagnaire",
             "email": "contact@scrola.net"
         }
     ],
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "require": {
-        "php": ">=5.2.0"
+        "php": ">=7.1",
+        "ext-curl": "*",
+        "guzzlehttp/guzzle": "^6.3"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7.5"
     },
     "autoload": {
-        "psr-0": {
-            "GuillaumeGagnaire": "src/"
+        "psr-4": {
+            "GuillaumeGagnaire\\Georide\\API\\": "src/"
         }
     }
 }
