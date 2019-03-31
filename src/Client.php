@@ -2,7 +2,7 @@
 
 namespace GuillaumeGagnaire\Georide\API;
 
-use ApiException;
+use GuillaumeGagnaire\Georide\API\ApiException;
 
 /**
  * Handles the requests to the Georide API
@@ -57,9 +57,10 @@ class Client
      * @param string $method        HTTP method to use
      * @param string $endpoint      API endpoint
      * @param array $data           Data to send
-     * @return array
+     * @return object
+     * @throws ApiException
      */
-    public function request(string $method, string $endpoint, array $data = []): array
+    public function request(string $method, string $endpoint, array $data = []): object
     {
         // Adds a leading slash to $endpoint
         if (substr($endpoint, 0, 1) !== '/') {
@@ -89,20 +90,18 @@ class Client
         }
 
         // Execute the request
-        $client = new \GuzzleHttp\Client();
-        $response = $client->request(
-            $method,
-            $this->api_url . $endpoint,
-            $params
-        );
-
-        // Check if the API haven't returned an error
-        $statusCode = $response->getStatusCode();
-        if ($statusCode >= 400) {
-            throw new ApiException($response->getBody(), $statusCode);
+        try {
+            $client = new \GuzzleHttp\Client();
+            $response = $client->request(
+                $method,
+                $this->api_url . $endpoint,
+                $params
+            );
+            return json_decode($response->getBody());
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            throw new ApiException($e->getMessage(), $e->getCode());
         }
-    
-        return json_decode($response->getBody());
+        return false;
     }
 
     /**
@@ -133,14 +132,14 @@ class Client
      * @param string $password
      * @return boolean
      */
-    public function login(string $email, string $password): boolean
+    public function login(string $email, string $password): bool
     {
         try {
             $ret = $this->request('POST', '/user/login', [
                 'email' => $email,
                 'password' => $password
             ]);
-            $this->token = $ret['authToken'];
+            $this->token = $ret->authToken;
         } catch (ApiException $e) {
             return false;
         }
@@ -152,7 +151,7 @@ class Client
      *
      * @return boolean
      */
-    public function logout(): boolean
+    public function logout(): bool
     {
         if ($this->token === null) {
             return false;
