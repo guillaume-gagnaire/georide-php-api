@@ -84,4 +84,19 @@ class User
 
         return true;
     }
+
+    /**
+     * Get informations from the current user.
+     *
+     * @return Types\User|null
+     */
+    public function getInformations():? Types\User
+    {
+        try {
+            $ret = $this->client->request('GET', '/user');
+        } catch (ApiException $e) {
+            return null;
+        }
+        return new Types\User($ret);
+    }
 }
