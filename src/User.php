@@ -99,4 +99,23 @@ class User
         }
         return new Types\User($ret);
     }
+
+    /**
+     * Get trackers who belongs to the current user.
+     *
+     * @return array|null
+     */
+    public function getTrackers():? array
+    {
+        try {
+            $trackers = $this->client->request('GET', '/user/trackers');
+            $ret = [];
+            foreach ($trackers as $tracker) {
+                $ret[] = new Types\Tracker($tracker, $this->client);
+            }
+        } catch (ApiException $e) {
+            return null;
+        }
+        return $ret;
+    }
 }
