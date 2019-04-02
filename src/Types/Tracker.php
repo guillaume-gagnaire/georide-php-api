@@ -63,4 +63,19 @@ class Tracker
             }
         }
     }
+
+    /**
+     * Unlocks a tracker.
+     *
+     * @return boolean
+     */
+    public function unlock()
+    {
+        try {
+            $this->client->request('POST', "/tracker/$this->trackerId/unlock");
+        } catch (ApiException $e) {
+            return false;
+        }
+        return true;
+    }
 }
