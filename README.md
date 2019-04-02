@@ -31,7 +31,7 @@ try {
      * And then, you can call the API freely,
      * ex: get the trips from the first found tracker
      */
-    $trackers = $georide->request('GET', '/user/trackers');
+    $trackers = $georide->user->getTrackers();
     if (sizeof($trackers) === 0) {
         throw new Exception("No tracker configured.");
     }
