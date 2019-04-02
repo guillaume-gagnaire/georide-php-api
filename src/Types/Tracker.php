@@ -69,7 +69,7 @@ class Tracker
      *
      * @return boolean
      */
-    public function toggleLock()
+    public function toggleLock(): bool
     {
         try {
             $this->client->request('POST', "/tracker/$this->trackerId/toggleLock");
@@ -84,7 +84,7 @@ class Tracker
      *
      * @return boolean
      */
-    public function lock()
+    public function lock(): bool
     {
         try {
             $this->client->request('POST', "/tracker/$this->trackerId/lock");
@@ -99,7 +99,7 @@ class Tracker
      *
      * @return boolean
      */
-    public function unlock()
+    public function unlock(): bool
     {
         try {
             $this->client->request('POST', "/tracker/$this->trackerId/unlock");
@@ -107,5 +107,57 @@ class Tracker
             return false;
         }
         return true;
+    }
+
+    /**
+     * Get a list of trips in a specified date interval
+     *
+     * @param string $from
+     * @param string $to
+     * @return array|null
+     */
+    public function getTrips(string $from, string $to):? array
+    {
+        $from = date_format(date_timestamp_set(new \DateTime(), strtotime($from)), 'c');
+        $to = date_format(date_timestamp_set(new \DateTime(), strtotime($to)), 'c');
+        try {
+            $trips = $this->client->request('GET', "/tracker/$this->trackerId/trips", [
+                'from' => $from,
+                'to' => $to
+            ]);
+            $ret = [];
+            foreach ($trips as $trip) {
+                $ret[] = new Trip($trip);
+            }
+        } catch (ApiException $e) {
+            return null;
+        }
+        return $ret;
+    }
+
+    /**
+     * Get a list of positions in a specified date interval
+     *
+     * @param string $from
+     * @param string $to
+     * @return array|null
+     */
+    public function getPositions(string $from, string $to):? array
+    {
+        $from = date_format(date_timestamp_set(new \DateTime(), strtotime($from)), 'c');
+        $to = date_format(date_timestamp_set(new \DateTime(), strtotime($to)), 'c');
+        try {
+            $positions = $this->client->request('GET', "/tracker/$this->trackerId/trips/positions", [
+                'from' => $from,
+                'to' => $to
+            ]);
+            $ret = [];
+            foreach ($positions as $position) {
+                $ret[] = new Position($position);
+            }
+        } catch (ApiException $e) {
+            return null;
+        }
+        return $ret;
     }
 }
