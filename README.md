@@ -37,9 +37,21 @@ try {
     }
 
     $tracker = $trackers[0];
+
+    // Lock your motorcycle
+    $tracker->lock();
+
+    // Unlock your motorcycle
+    $tracker->unlock();
+
+    // Toggle the lock of your motorcycle
+    $tracker->toggleLock();
+
+    // Get the trips of your motorcycle
     $trips = $tracker->getTrips('2019-02-23', '2019-02-24');
 
-    var_dump($trips);
+    // Get the GPS positions of your motorcycle
+    $positions = $tracker->getPositions('2019-02-23', '2019-02-24');
 } catch (ApiException $e) {
     echo $e->getMessage();
 } catch (Exception $e) {
