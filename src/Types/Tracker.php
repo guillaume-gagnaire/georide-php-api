@@ -69,6 +69,36 @@ class Tracker
      *
      * @return boolean
      */
+    public function toggleLock()
+    {
+        try {
+            $this->client->request('POST', "/tracker/$this->trackerId/toggleLock");
+        } catch (ApiException $e) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Unlocks a tracker.
+     *
+     * @return boolean
+     */
+    public function lock()
+    {
+        try {
+            $this->client->request('POST', "/tracker/$this->trackerId/lock");
+        } catch (ApiException $e) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Unlocks a tracker.
+     *
+     * @return boolean
+     */
     public function unlock()
     {
         try {
