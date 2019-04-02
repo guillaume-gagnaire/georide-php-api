@@ -134,4 +134,30 @@ class Tracker
         }
         return $ret;
     }
+
+    /**
+     * Get a list of positions in a specified date interval
+     *
+     * @param string $from
+     * @param string $to
+     * @return array|null
+     */
+    public function getPositions(string $from, string $to):? array
+    {
+        $from = date_format(date_timestamp_set(new \DateTime(), strtotime($from)), 'c');
+        $to = date_format(date_timestamp_set(new \DateTime(), strtotime($to)), 'c');
+        try {
+            $positions = $this->client->request('GET', "/tracker/$this->trackerId/trips/positions", [
+                'from' => $from,
+                'to' => $to
+            ]);
+            $ret = [];
+            foreach ($positions as $position) {
+                $ret[] = new Position($position);
+            }
+        } catch (ApiException $e) {
+            return null;
+        }
+        return $ret;
+    }
 }

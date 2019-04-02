@@ -3,24 +3,17 @@
 namespace GuillaumeGagnaire\Georide\API\Types;
 
 /**
- * Defines a Georide trip
+ * Defines a Georide tracker position
  */
-class Trip
+class Position
 {
-    public $trackerId;
-    public $averageSpeed;
-    public $distance;
-    public $duration;
-    public $startAddress;
-    public $niceStartAddress;
-    public $startLat;
-    public $startLon;
-    public $endAddress;
-    public $niceEndAddress;
-    public $endLat;
-    public $endLon;
-    public $startTime;
-    public $endTime;
+    public $id;
+    public $fixtime;
+    public $latitude;
+    public $longitude;
+    public $altitude;
+    public $speed;
+    public $address;
 
     /**
      * Constructor.

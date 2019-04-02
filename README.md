@@ -37,10 +37,7 @@ try {
     }
 
     $tracker = $trackers[0];
-    $trips = $georide->request('GET', "/tracker/$tracker->trackerId/trips", [
-        'from' => '2019-02-23T00:00:00Z',
-        'to' => '2019-02-24T00:00:00Z'
-    ]);
+    $trips = $tracker->getTrips('2019-02-23', '2019-02-24');
 
     var_dump($trips);
 } catch (ApiException $e) {
