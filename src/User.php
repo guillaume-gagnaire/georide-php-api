@@ -76,7 +76,7 @@ class User
         }
 
         try {
-            $this->client->request('POST', '/user/new-token');
+            $ret = $this->client->request('POST', '/user/new-token');
             $this->client->setAuthToken($ret->authToken);
         } catch (ApiException $e) {
             return false;
